@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Игра про свиней</title>
+	<style type="text/css">
+      			canvas { background-image: url(https://w-dog.ru/wallpapers/10/1/341324648897471.jpg				);
+
+   }
+    </style>
+</head>
+<body>
+	<canvas id="canvas" height="900" width="1700"></div></canvas>
+
+	<div id="pig"></div>
+	<div id="scope"></div>
+	<div id="puten" width=300 height=300></div>
+	<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript">
+
+
+		var directions = {
+			87: "up",
+			83: "down",
+			65: "left",
+			68: "right"
+		}
+
+		var canvas = document.getElementById("canvas")
+		var ctx = canvas.getContext("2d")
+		var width = canvas.width
+		var height = canvas.height
+
+
+		var blockSize = 10
+		var widthInBlocks = width / blockSize
+		var heightInBlocks = height / blockSize
+
+		var score = 0
+
+		var audio = new Audio('C:/Users/Artem/Desktop/Программирование/PIG.js/audio/dead.mp3');
+
+		var drawBorder = function() {
+			ctx.fillStyle = "magenta"
+			ctx.fillRect(0, 0, width, blockSize)
+			ctx.fillRect(0, height - blockSize, width, blockSize)
+			ctx.fillRect(0, 0, blockSize, height)
+			ctx.fillRect(width - blockSize, 0, blockSize, height)
+		}
+
+		var Scope = function(x, y) {
+			this.x = x;
+			this.y = y;
+			this.direction = "d"
+		}
+
+		var drawScore = function() {
+		   ctx.font = "60px Times New Roman"
+		   ctx.fillStyle = "gold"
+		   ctx.textAlign = "center"
+		   ctx.textBaseLine = "top"
+		   ctx.fillText("Сало: " + score, 850, 60)
+		  }
+
+		Scope.prototype.draw = function() {
+			var scopeHtml = "<img id=test src=https://pngimg.com/uploads/aim/small/aim_PNG61.png>"
+
+			this.scope = $(scopeHtml)
+
+			this.scope.css({
+				position: "absolute",
+				left: this.x,
+				top: this.y,
+				width: 100,
+				height: 100
+			});
+
+			//$("body").append(this.scope);
+			$("#scope").append(this.scope)
+		};
+
+		function getPosition(e){
+			var x = 0;
+			var y = 0;
+
+			x = e.clientX;
+			y = e.clientY;
+		 
+			return {x: x, y: y}
+			
+		}
+
+		Scope.prototype.cord = function() {
+			$("canvas").click(function(e) {
+			var coord = getPosition(e);
+			console.log(coord)
+			
+		});
+		}
+
+
+		Scope.prototype.clear = function() {
+			var rr = $("#test").attr('id')
+			$("#test").remove()
+			console.log(rr)
+		}
+
+		var Putin = function() {
+
+		}
+
+		Putin.prototype.draw = function(x, y){
+			var putinHtml = "<img id=test1 src=https://abrakadabra.fun/uploads/posts/2021-12/1640959541_4-abrakadabra-fun-p-golova-bez-fona-20.png>"
+
+			this.putin = $(putinHtml)
+
+			var randomCol = 500
+			var randomRow = 400
+
+			this.putin.css({
+				position: "absolute",
+				left: randomCol,
+				top: randomRow,
+				width: 200,
+				height: 200
+			});
+
+		 	$("#puten").append(this.putin)
+ 		}
+
+		var Pig = function(x, y){
+		 	x = this.x
+		 	y = this.y
+		 }
+
+		 Pig.prototype.random = function() {
+		 	var randomCol = Math.floor(Math.random() * canvas.width)
+			var randomRow = Math.floor(Math.random() * canvas.height)
+		 }
+
+		 Pig.prototype.draw = function() {
+		 	var pigHtml = "<img id=test1 src=https://static.wikia.nocookie.net/minecraft_ru_gamepedia/images/9/9f/%D0%A1%D0%B2%D0%B8%D0%BD%D1%8C%D1%8F_JE3_BE2.png/revision/latest?cb=20200317064232>"
+		 	if (score >= 100) {
+  					pigHtml = "<img id=test1 src=https://community.akamai.steamstatic.com/economy/image/omZo-YJjnL2r9xAQz5PaYyxABqBEQKXhHMDDYZt2RMqsC6O4NomRzDzlWB3P-wtAlDWSo7zVwiBUTBZDvhB3o-f7Z4LP5tPuErAVVf7YKXuyqzKeoNzb/360fx360f>"
+  					console.log("zelenka")
+  				}
+
+		 	this.pig = $(pigHtml)
+
+		 	var randomCol = Math.floor(Math.random() * canvas.width)
+			var randomRow = Math.floor(Math.random() * canvas.height)
+
+			this.position = new Pig(randomCol, randomRow)
+			// console.log(randomCol)
+			// console.log(randomRow)
+			this.pig.css({
+				position: "absolute",
+				left: randomCol,
+				top: randomRow,
+				width: 200 ,
+				height: 200
+			});
+                                         
+			pig.x = randomCol
+			pig.y = randomRow
+
+			$("#pig").append(this.pig)
+		 };
+
+		 Scope.prototype.equal = function(otherBlock) {
+		 	//console.log(otherBlock.x, otherBlock.y)
+
+   			return this.x === otherBlock.x && this.y === otherBlock.y
+  		}
+
+
+  		Scope.prototype.kill = function(pig) {
+  			console.log(pig.x, pig.y)
+  			console.log(this.x, this.y)
+
+  			if (Math.abs(pig.x - sc.x) <= 100 && Math.abs(pig.y - sc.y) <= 70) {
+  				score++
+  				$("#test1").remove()
+  				audio.play()
+  				console.log("Kill")
+  				var pig = new Pig()
+  				pig.draw()
+  				$("#test1").append(this.pig)
+  			}
+  		}
+
+
+		var intervalId = setInterval (function() {
+			 ctx.clearRect(0, 0, width, height)
+		 	drawBorder()
+		 	sc.cord()
+		 	pig.random()
+		 	drawScore()
+		 	if (score >= 103) {
+		 			$("#test1").remove()
+			 		ctx.font = "60px Times New Roman"
+				   	ctx.fillStyle = "gold"
+				   	ctx.textAlign = "center"
+				  	ctx.textBaseLine = "top"
+				  	var put = new Putin(600, 850)
+				  	put.draw()
+				   	ctx.fillText("ПОБЕДА!!!", 850, 500)
+				   	ctx.fillText("УКРАИНСКАЯ АРМИЯ ПОЛНОСТЬЮ РАЗБИТА!!!", 850, 400)
+			 	}
+		 }, 
+		 100)
+
+
+
+		// $("body").keydown(function(event) {
+		// 	var direction = directions[event.keyCode]
+		// 	sc.move(direction)
+			
+		// })
+
+		var sc = new Scope(400, 500)
+		var pig = new Pig()
+		pig.draw()
+		sc.draw()
+
+
+		$("html").mousemove(function(event) {
+			 	$("#test").offset({
+			 		left: event.pageX,
+			 		top: event.pageY
+			 		})
+			 	sc.x = event.pageX
+			 	sc.y = event.pageY
+
+		})
+
+		$("html").click(function(event) {
+			sc.kill(pig)
+		})
+
+
+
+		
+	</script>
+</body>
+</html>
